@@ -5,10 +5,13 @@
 
 namespace Kozz\Components\Email;
 
+use IteratorAggregate;
 use RegexIterator;
 use ArrayIterator;
+use Kozz\Components\Collection\Collection;
+use Kozz\Interfaces\IArrayable;
 
-class AddressParser
+class AddressParser implements IArrayable, IteratorAggregate
 {
 
   /**
@@ -17,15 +20,9 @@ class AddressParser
   protected $domain;
 
   /**
-   * @var array
+   * @var Collection
    */
-  protected $raw;
-
-  /**
-   * @var array
-   */
-  protected $container = [];
-
+  protected $collection;
 
   public static function parse($emails, $domain = 'domain.default')
   {
@@ -39,7 +36,7 @@ class AddressParser
       $emails = $this->processInitString($emails);
     }
     $this->setDomain($domain);
-    $this->raw = $emails;
+    $this->collection = Collection::from(new ArrayIterator($emails));
   }
 
   public function setDomain($domain)
@@ -59,12 +56,12 @@ class AddressParser
 
   public function toArray()
   {
-    return array_unique(iterator_to_array($this->getProcessIterator()));
+    return array_unique(iterator_to_array($this->getIterator()));
   }
 
-  protected function getProcessIterator()
+  public function getIterator()
   {
-    $raw = new ArrayIterator($this->raw);
+    $raw = $this->collection->getIterator();
 
     $autoComplete = new RegexIterator(clone $raw, '/^([a-z0-9\-._]+)(\@)$/iu', RegexIterator::REPLACE);
     $autoComplete->replacement = '$1$2'.$this->domain;
