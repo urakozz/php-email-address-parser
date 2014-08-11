@@ -27,6 +27,8 @@ Examples
 #### Parse String
 
 ```php
+    use Kozz\Components\Email\AddressParser;
+    
     $emails = 'example0@gmail.com , example1@gmail.com example2@gmail.com';
     $array = AddressParser::parse($emails)->toArray();
     //$array = ['example0@gmail.com','example1@gmail.com', 'example2@gmail.com']
@@ -35,6 +37,8 @@ Examples
 #### Autocomplete domain
 
 ```php
+    use Kozz\Components\Email\AddressParser;
+    
     $emails = 'john@, aaron@, no-reply@gmail.com';
     $array = AddressParser::parse($emails, 'company.com')->toArray();
     //$array = ['john@company.com', 'aaron@company.com', 'no-reply@gmail.com']
@@ -43,6 +47,8 @@ Examples
 #### Built-in email validation
 
 ```php
+    use Kozz\Components\Email\AddressParser;
+    
     $emails = 'john@, no-reply@gmail.com, ... skjs  sljfasfn afs, jhsldf.sdfjk"""85;@#$ ';
     $array = AddressParser::parse($emails, 'company.com')->toArray();
     //$array = ['john@company.com', 'no-reply@gmail.com']
